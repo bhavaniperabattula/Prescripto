@@ -1,25 +1,35 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { AppContext } from '../context/AppContext';
 import { assets } from '../assets/assets'
+import { useRouteLoaderData } from 'react-router-dom';
 
 const MyProfile = () => {
-  const[userData,setUserData]=useState({
-    name:"Bibek Chy",
-    image:assets.profile_pic,
-    email:'Helloworld@gmail.com',
-    phone:980343542,
-    address:{
-      line1:"Kathmadhu",
-      line2:"Circle church gate"
-    },
-    gender:"Male",
-    dob:"2003-09-16"
-  })
+  
+  const {userData, setUserData, token, backendUrl, loadUserProfileData} = useContext(AppContext)
 
   const [isEdit,setIsEdit]=useState(false);
+  const [image, setImage] = useState(false);
 
-  return (
+  const updateUserProfileData = async () => {
+
+  }
+
+  return userData && (
     <div className='max-w-lg flex flex-col gap-2 text-sm '>
-      <img className='w-36 rounded' src={userData.image} alt="" />
+
+      {
+        isEdit
+        ? <label htmlFor="image">
+          <div>
+            <img src={image ? URL.createObjectURL(image): userData.image} alt="" />
+            <img src={image ? '': assets.upload_icon} alt="" />
+          </div>
+          <input onChange={(e)=>setImage(e.target.files[0])} type="text" id="image" hidden/>
+        </label>
+        :<img className='w-36 rounded' src={userData.image} alt="" />
+
+      }
+
       {
         isEdit
         ? <input className='bg-gray-50 text-3xl font-medium max-w-6 mt-4' type="text" value={userData.name} onChange={e=>setUserData(prev=>({...prev,name:e.target.value}))} />
